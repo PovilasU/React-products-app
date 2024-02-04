@@ -1,154 +1,34 @@
+// App.jsx
+import React, { useState } from "react";
+import Table from "./Components/Table";
+import { addProduct, removeProduct, editProduct } from "./utils";
 import "./App.css";
 
-import React, { useState, useEffect } from "react";
+const App = () => {
+  const [products, setProducts] = useState([]);
 
-import ProductRow from "./Components/ProductRow";
-// App.jsx
-
-import { getProductsAsync, saveEdit, cancelEdit } from "./utils";
-function App() {
-  const [products, setProducts] = useState(() => {
-    const savedProducts = localStorage.getItem("products");
-    return savedProducts ? JSON.parse(savedProducts) : [];
-  });
-  const [editingProduct, setEditingProduct] = useState(null);
-
-  const [newProduct, setNewProduct] = useState({
-    name: "",
-    description: "",
-    link: "",
-  });
-
-  const handleInputChangeAdd = (e) => {
-    setNewProduct({ ...newProduct, [e.target.name]: e.target.value });
+  const handleAddProduct = (newProduct) => {
+    setProducts((prevProducts) => addProduct(newProduct, prevProducts));
   };
 
-  const handleInputChange = (e) => {
-    setEditingProduct({ ...editingProduct, [e.target.name]: e.target.value });
+  const handleRemoveProduct = (productId) => {
+    setProducts((prevProducts) => removeProduct(productId, prevProducts));
   };
 
-  const addProductAsync = async (product) => {
-    // Check if any of the input fields are empty
-    if (!product.name || !product.description || !product.link) {
-      alert("All fields must be filled out");
-      return;
-    }
-    return new Promise((resolve, reject) => {
-      try {
-        const updatedProducts = [...products, product];
-        localStorage.setItem("products", JSON.stringify(updatedProducts));
-        setProducts(updatedProducts);
-        resolve(updatedProducts);
-      } catch (error) {
-        reject(error);
-      }
-      // Clear the inputs
-      setNewProductName("");
-      setNewProductDescription("");
-      setNewProductLink("");
-    });
-  };
-
-  const deleteProduct = (id) => {
-    // Remove the product from the state
-    const newProducts = products.filter((product) => product.id !== id);
-    setProducts(newProducts);
-
-    // Remove the product from local storage
-    localStorage.setItem("products", JSON.stringify(newProducts));
-  };
-
-  useEffect(() => {
-    localStorage.setItem("products", JSON.stringify(products));
-  }, [products]);
-
-  const saveEdit = (id) => {
-    const updatedProducts = products.map((product) =>
-      product.id === id ? editingProduct : product
-    );
-
-    setProducts(updatedProducts);
-    setEditingProduct(null);
-  };
-
-  const cancelEdit = () => {
-    // Reset the editingProduct state
-    setEditingProduct(null);
+  const handleEditProduct = (updatedProduct) => {
+    setProducts((prevProducts) => editProduct(updatedProduct, prevProducts));
   };
 
   return (
-    <div className="container">
-      {/* Add your form for adding a product here */}
-      {/* Map over your products and create a table row for each one */}
-      <table className="table-bordered table-centered">
-        <thead>
-          <tr>
-            <th>Product Name</th>
-            <th>Description</th>
-            <th>Link</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr id="firstRow">
-            <td>
-              <input
-                type="text"
-                name="name"
-                placeholder="Enter product name"
-                value={newProduct.name}
-                onChange={handleInputChangeAdd}
-              />
-            </td>
-            <td>
-              <input
-                type="text"
-                name="description"
-                placeholder="Enter product description"
-                value={newProduct.description}
-                onChange={handleInputChangeAdd}
-              />
-            </td>
-            <td>
-              <input
-                type="text"
-                name="link"
-                placeholder="Enter product link"
-                value={newProduct.link}
-                onChange={handleInputChangeAdd}
-              />
-            </td>
-            <td>
-              <button
-                onClick={() => {
-                  addProductAsync({
-                    id: Date.now(),
-                    name: newProduct.name,
-                    description: newProduct.description,
-                    link: newProduct.link,
-                  });
-                  setNewProduct({ name: "", description: "", link: "" });
-                }}
-              >
-                Add Product
-              </button>
-            </td>
-          </tr>
-          {products.map((product) => (
-            <ProductRow
-              key={product.id}
-              product={product}
-              editingProduct={editingProduct}
-              handleInputChange={handleInputChange}
-              saveEdit={saveEdit}
-              cancelEdit={cancelEdit}
-              setEditingProduct={setEditingProduct}
-            />
-          ))}
-        </tbody>
-      </table>
+    <div>
+      <Table
+        products={products}
+        addProduct={handleAddProduct}
+        removeProduct={handleRemoveProduct}
+        editProduct={handleEditProduct}
+      />
     </div>
   );
-}
+};
 
 export default App;
