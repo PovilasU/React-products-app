@@ -17,6 +17,6 @@ This is a simple React CRUD (Create, Read, Update, Delete) application.
 
 ## Contact
 
-- [Hosted Project ](https://povilas-crud-demo-app.netlify.app/)
+- [APP URL](https://povilas-crud-demo-app.netlify.app/)
 - [Project Git Repository](https://github.com/PovilasU/React-products-app)
 - [Linkedin](https://www.linkedin.com/in/povilas-urbonas-0a6a53a4/)
