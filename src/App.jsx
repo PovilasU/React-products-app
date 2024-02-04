@@ -33,7 +33,12 @@ const App = () => {
   };
 
   // We're returning the Table component. We're passing the products state variable and the handlers object to this component.
-  return <Table products={products} {...handlers} />;
+  return (
+    <>
+      <h1>CRUD App demo</h1>
+      <Table products={products} {...handlers} />
+    </>
+  );
 };
 
 // We're making our component available to be used in other parts of our code.
