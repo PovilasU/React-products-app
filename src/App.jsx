@@ -7,19 +7,20 @@ import {} from "./utils";
 function App() {
   const [products, setProducts] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
+
   const [newProduct, setNewProduct] = useState({
     name: "",
     description: "",
     link: "",
   });
 
-  const handleInputChange = (e) => {
+  const handleInputChangeAdd = (e) => {
     setNewProduct({ ...newProduct, [e.target.name]: e.target.value });
   };
 
-  const [editProductName, setEditProductName] = useState("");
-  const [editProductDescription, setEditProductDescription] = useState("");
-  const [editProductLink, setEditProductLink] = useState("");
+  const handleInputChange = (e) => {
+    setEditingProduct({ ...editingProduct, [e.target.name]: e.target.value });
+  };
 
   const addProductAsync = async (product) => {
     // Check if any of the input fields are empty
@@ -50,13 +51,6 @@ function App() {
 
     // Remove the product from local storage
     localStorage.setItem("products", JSON.stringify(newProducts));
-  };
-
-  const handleEditProduct = (product) => {
-    setEditingProduct(product);
-    setEditProductName(product.name);
-    setEditProductDescription(product.description);
-    setEditProductLink(product.link);
   };
 
   useEffect(() => {
@@ -104,6 +98,24 @@ function App() {
     setEditingProduct(null);
   };
 
+  const updateProduct = (id) => {
+    const updatedProducts = products.map((product) =>
+      product.id === id ? editingProduct : product
+    );
+
+    setProducts(updatedProducts);
+    setEditingProduct(null);
+  };
+
+  const saveEdit = (id) => {
+    const updatedProducts = products.map((product) =>
+      product.id === id ? editingProduct : product
+    );
+
+    setProducts(updatedProducts);
+    setEditingProduct(null);
+  };
+
   const cancelEdit = () => {
     // Reset the editingProduct state
     setEditingProduct(null);
@@ -130,7 +142,7 @@ function App() {
                 name="name"
                 placeholder="Enter product name"
                 value={newProduct.name}
-                onChange={handleInputChange}
+                onChange={handleInputChangeAdd}
               />
             </td>
             <td>
@@ -139,7 +151,7 @@ function App() {
                 name="description"
                 placeholder="Enter product description"
                 value={newProduct.description}
-                onChange={handleInputChange}
+                onChange={handleInputChangeAdd}
               />
             </td>
             <td>
@@ -148,7 +160,7 @@ function App() {
                 name="link"
                 placeholder="Enter product link"
                 value={newProduct.link}
-                onChange={handleInputChange}
+                onChange={handleInputChangeAdd}
               />
             </td>
             <td>
@@ -172,7 +184,7 @@ function App() {
               <tr key={product.id}>
                 {editingProduct && editingProduct.id === product.id ? (
                   <>
-                    <td>
+                    {/* <td>
                       <input
                         type="text"
                         value={editProductName}
@@ -194,9 +206,34 @@ function App() {
                         value={editProductLink}
                         onChange={(e) => setEditProductLink(e.target.value)}
                       />
+                    </td> */}
+
+                    <td>
+                      <input
+                        type="text"
+                        name="name"
+                        value={editingProduct.name}
+                        onChange={handleInputChange}
+                      />
                     </td>
                     <td>
-                      <button onClick={() => handleUpdateProduct(product.id)}>
+                      <input
+                        type="text"
+                        name="description"
+                        value={editingProduct.description}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        name="link"
+                        value={editingProduct.link}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <button onClick={() => saveEdit(product.id)}>
                         Update Product
                       </button>
                       <button onClick={() => cancelEdit()}>Cancel</button>
@@ -210,7 +247,7 @@ function App() {
                       <a href={product.link}>Link</a>
                     </td>
                     <td>
-                      <button onClick={() => handleEditProduct(product)}>
+                      <button onClick={() => setEditingProduct(product)}>
                         Edit
                       </button>
                       <button onClick={() => deleteProduct(product.id)}>
