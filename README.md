@@ -1,8 +1,22 @@
-# React + Vite
+# React CRUD App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a simple React CRUD (Create, Read, Update, Delete) application.
 
-Currently, two official plugins are available:
+## Installation
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Clone the repository: `git clone https://github.com/PovilasU/React-products-app.git`
+2. Navigate to the project directory: `cd React-products-app`
+3. Install the dependencies: `npm install`
+4. Start the application: `npm start`
+
+## Features
+
+- Add a new product
+- Edit an existing product
+- Delete a product
+
+## Contact
+
+- [Hosted Project ](https://povilas-crud-demo-app.netlify.app/)
+- [Project Git Repository](https://github.com/PovilasU/React-products-app)
+- [Linkedin](https://www.linkedin.com/in/povilas-urbonas-0a6a53a4/)
