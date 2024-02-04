@@ -1,5 +1,6 @@
 // AddProductRow.jsx
 import React, { useState } from "react";
+import { handleInputChange, handleAddProduct } from "../utils";
 
 const AddProductRow = ({ addProduct }) => {
   const [newProduct, setNewProduct] = useState({
@@ -8,47 +9,27 @@ const AddProductRow = ({ addProduct }) => {
     link: "",
   });
 
-  const handleInputChange = (event) => {
-    setNewProduct({ ...newProduct, [event.target.name]: event.target.value });
-  };
-
-  const handleAddProduct = (event) => {
-    event.preventDefault();
-    addProduct(newProduct);
-    setNewProduct({ name: "", description: "", link: "" });
-  };
-
   return (
     <tr>
+      {["name", "description", "link"].map((field) => (
+        <td key={field}>
+          <input
+            name={field}
+            value={newProduct[field]}
+            onChange={(event) =>
+              handleInputChange(event, newProduct, setNewProduct)
+            }
+          />
+        </td>
+      ))}
       <td>
-        <input
-          name="name"
-          value={newProduct.name}
-          onChange={handleInputChange}
-          placeholder="Name"
-          required
-        />
-      </td>
-      <td>
-        <input
-          name="description"
-          value={newProduct.description}
-          onChange={handleInputChange}
-          placeholder="Description"
-          required
-        />
-      </td>
-      <td>
-        <input
-          name="link"
-          value={newProduct.link}
-          onChange={handleInputChange}
-          placeholder="Link"
-          required
-        />
-      </td>
-      <td>
-        <button onClick={handleAddProduct}>Add</button>
+        <button
+          onClick={(event) =>
+            handleAddProduct(event, newProduct, addProduct, setNewProduct)
+          }
+        >
+          Add
+        </button>
       </td>
     </tr>
   );

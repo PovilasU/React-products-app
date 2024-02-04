@@ -7,28 +7,16 @@ import "./App.css";
 const App = () => {
   const [products, setProducts] = useState([]);
 
-  const handleAddProduct = (newProduct) => {
-    setProducts((prevProducts) => addProduct(newProduct, prevProducts));
+  const handlers = {
+    addProduct: (newProduct) =>
+      setProducts((prevProducts) => addProduct(newProduct, prevProducts)),
+    removeProduct: (productId) =>
+      setProducts((prevProducts) => removeProduct(productId, prevProducts)),
+    editProduct: (updatedProduct) =>
+      setProducts((prevProducts) => editProduct(updatedProduct, prevProducts)),
   };
 
-  const handleRemoveProduct = (productId) => {
-    setProducts((prevProducts) => removeProduct(productId, prevProducts));
-  };
-
-  const handleEditProduct = (updatedProduct) => {
-    setProducts((prevProducts) => editProduct(updatedProduct, prevProducts));
-  };
-
-  return (
-    <div>
-      <Table
-        products={products}
-        addProduct={handleAddProduct}
-        removeProduct={handleRemoveProduct}
-        editProduct={handleEditProduct}
-      />
-    </div>
-  );
+  return <Table products={products} {...handlers} />;
 };
 
 export default App;
