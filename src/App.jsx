@@ -7,9 +7,15 @@ import {} from "./utils";
 function App() {
   const [products, setProducts] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
-  const [newProductName, setNewProductName] = useState("");
-  const [newProductDescription, setNewProductDescription] = useState("");
-  const [newProductLink, setNewProductLink] = useState("");
+  const [newProduct, setNewProduct] = useState({
+    name: "",
+    description: "",
+    link: "",
+  });
+
+  const handleInputChange = (e) => {
+    setNewProduct({ ...newProduct, [e.target.name]: e.target.value });
+  };
 
   const [editProductName, setEditProductName] = useState("");
   const [editProductDescription, setEditProductDescription] = useState("");
@@ -44,36 +50,6 @@ function App() {
 
     // Remove the product from local storage
     localStorage.setItem("products", JSON.stringify(newProducts));
-  };
-
-  const updateProduct = (updatedProduct) => {
-    setProducts(
-      products.map((product) =>
-        product.id === updatedProduct.id ? updatedProduct : product
-      )
-    );
-  };
-
-  const handleSubmit = () => {
-    if (editingProduct) {
-      updateProduct({
-        id: editingProduct.id,
-        name: newProductName,
-        description: newProductDescription,
-        link: newProductLink,
-      });
-    } else {
-      addProductAsync({
-        id: Date.now(),
-        name: newProductName,
-        description: newProductDescription,
-        link: newProductLink,
-      });
-    }
-    setEditingProduct(null);
-    setNewProductName("");
-    setNewProductDescription("");
-    setNewProductLink("");
   };
 
   const handleEditProduct = (product) => {
@@ -151,37 +127,41 @@ function App() {
             <td>
               <input
                 type="text"
+                name="name"
                 placeholder="Enter product name"
-                value={newProductName}
-                onChange={(e) => setNewProductName(e.target.value)}
+                value={newProduct.name}
+                onChange={handleInputChange}
               />
             </td>
             <td>
               <input
                 type="text"
+                name="description"
                 placeholder="Enter product description"
-                value={newProductDescription}
-                onChange={(e) => setNewProductDescription(e.target.value)}
+                value={newProduct.description}
+                onChange={handleInputChange}
               />
             </td>
             <td>
               <input
                 type="text"
+                name="link"
                 placeholder="Enter product link"
-                value={newProductLink}
-                onChange={(e) => setNewProductLink(e.target.value)}
+                value={newProduct.link}
+                onChange={handleInputChange}
               />
             </td>
             <td>
               <button
-                onClick={() =>
+                onClick={() => {
                   addProductAsync({
                     id: Date.now(),
-                    name: newProductName,
-                    description: newProductDescription,
-                    link: newProductLink,
-                  })
-                }
+                    name: newProduct.name,
+                    description: newProduct.description,
+                    link: newProduct.link,
+                  });
+                  setNewProduct({ name: "", description: "", link: "" });
+                }}
               >
                 Add Product
               </button>
