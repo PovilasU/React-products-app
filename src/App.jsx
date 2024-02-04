@@ -1,9 +1,11 @@
 import "./App.css";
 
 import React, { useState, useEffect } from "react";
+import ProductInput from "./Components/ProductInput";
+import ProductActions from "./Components/ProductActions";
 // App.jsx
 
-import {} from "./utils";
+import { getProductsAsync, saveEdit, cancelEdit } from "./utils";
 function App() {
   const [products, setProducts] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
@@ -71,41 +73,6 @@ function App() {
 
     getProductsAsync();
   }, []);
-
-  const handleUpdateProduct = (id) => {
-    // Find the index of the product with the given id
-    const index = products.findIndex((product) => product.id === id);
-
-    // Create a new product object with the updated name, description, and link
-    const updatedProduct = {
-      ...products[index],
-      name: editProductName,
-      description: editProductDescription,
-      link: editProductLink,
-    };
-
-    // Create a new array with the updated product
-    const updatedProducts = [
-      ...products.slice(0, index),
-      updatedProduct,
-      ...products.slice(index + 1),
-    ];
-
-    // Update the products state
-    setProducts(updatedProducts);
-
-    // Reset the editingProduct state
-    setEditingProduct(null);
-  };
-
-  const updateProduct = (id) => {
-    const updatedProducts = products.map((product) =>
-      product.id === id ? editingProduct : product
-    );
-
-    setProducts(updatedProducts);
-    setEditingProduct(null);
-  };
 
   const saveEdit = (id) => {
     const updatedProducts = products.map((product) =>
@@ -184,60 +151,25 @@ function App() {
               <tr key={product.id}>
                 {editingProduct && editingProduct.id === product.id ? (
                   <>
-                    {/* <td>
-                      <input
-                        type="text"
-                        value={editProductName}
-                        onChange={(e) => setEditProductName(e.target.value)}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        value={editProductDescription}
-                        onChange={(e) =>
-                          setEditProductDescription(e.target.value)
-                        }
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        value={editProductLink}
-                        onChange={(e) => setEditProductLink(e.target.value)}
-                      />
-                    </td> */}
-
-                    <td>
-                      <input
-                        type="text"
-                        name="name"
-                        value={editingProduct.name}
-                        onChange={handleInputChange}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        name="description"
-                        value={editingProduct.description}
-                        onChange={handleInputChange}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        name="link"
-                        value={editingProduct.link}
-                        onChange={handleInputChange}
-                      />
-                    </td>
-                    <td>
-                      <button onClick={() => saveEdit(product.id)}>
-                        Update Product
-                      </button>
-                      <button onClick={() => cancelEdit()}>Cancel</button>
-                    </td>
+                    <ProductInput
+                      name="name"
+                      value={editingProduct.name}
+                      onChange={handleInputChange}
+                    />
+                    <ProductInput
+                      name="description"
+                      value={editingProduct.description}
+                      onChange={handleInputChange}
+                    />
+                    <ProductInput
+                      name="link"
+                      value={editingProduct.link}
+                      onChange={handleInputChange}
+                    />
+                    <ProductActions
+                      onSave={() => saveEdit(product.id)}
+                      onCancel={() => cancelEdit()}
+                    />
                   </>
                 ) : (
                   <>
