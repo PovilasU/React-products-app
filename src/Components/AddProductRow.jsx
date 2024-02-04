@@ -43,6 +43,18 @@ const AddProductRow = ({ addProduct }) => {
         >
           Add
         </button>
+        <button
+          // When we click the "Clear Fields" button, we're calling a function that resets the newProduct state.
+          onClick={() =>
+            setNewProduct({
+              name: "",
+              description: "",
+              link: "",
+            })
+          }
+        >
+          &nbsp;Clear&nbsp;&nbsp;&nbsp;&nbsp;
+        </button>
       </td>
     </tr>
   );
