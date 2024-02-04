@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // We're importing a component that we've defined in another file: Table.
 import Table from "./Components/Table";
@@ -12,7 +12,14 @@ import "./App.css";
 // We're creating a new component called App. This component will be the main component of our application.
 const App = () => {
   // We're using the useState hook to create a new state variable called products and a function to update it called setProducts. Initially, products is an empty array.
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(
+    JSON.parse(localStorage.getItem("products")) || []
+  );
+
+  // Use useEffect to update localStorage when products state changes
+  useEffect(() => {
+    localStorage.setItem("products", JSON.stringify(products));
+  }, [products]);
 
   // We're creating an object called handlers. This object contains three functions: addProduct, removeProduct, and editProduct.
   // Each of these functions updates the products state variable by calling setProducts.
