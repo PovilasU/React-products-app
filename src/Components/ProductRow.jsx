@@ -1,5 +1,6 @@
-// ProductRow.jsx
 import React, { useState, useEffect } from "react";
+import EditableField from "./EditableField";
+import ActionButtons from "./ActionButtons";
 
 const ProductRow = ({ product, removeProduct, editProduct }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -9,8 +10,8 @@ const ProductRow = ({ product, removeProduct, editProduct }) => {
     setEditedProduct(product);
   }, [product]);
 
-  const handleEdit = () => {
-    setIsEditing(true);
+  const handleInputChange = (field, value) => {
+    setEditedProduct({ ...editedProduct, [field]: value });
   };
 
   const handleSave = () => {
@@ -18,53 +19,26 @@ const ProductRow = ({ product, removeProduct, editProduct }) => {
     setIsEditing(false);
   };
 
+  const fields = ["name", "description", "link"];
+
   return (
     <tr>
-      {isEditing ? (
-        <>
-          <td>
-            <input
-              value={editedProduct.name}
-              onChange={(e) =>
-                setEditedProduct({ ...editedProduct, name: e.target.value })
-              }
-            />
-          </td>
-          <td>
-            <input
-              value={editedProduct.description}
-              onChange={(e) =>
-                setEditedProduct({
-                  ...editedProduct,
-                  description: e.target.value,
-                })
-              }
-            />
-          </td>
-          <td>
-            <input
-              value={editedProduct.link}
-              onChange={(e) =>
-                setEditedProduct({ ...editedProduct, link: e.target.value })
-              }
-            />
-          </td>
-          <td>
-            <button onClick={handleSave}>Save</button>
-            <button onClick={() => setIsEditing(false)}>Cancel</button>
-          </td>
-        </>
-      ) : (
-        <>
-          <td>{product.name}</td>
-          <td>{product.description}</td>
-          <td>{product.link}</td>
-          <td>
-            <button onClick={() => removeProduct(product.id)}>Remove</button>
-            <button onClick={handleEdit}>Edit</button>
-          </td>
-        </>
-      )}
+      {fields.map((field) => (
+        <EditableField
+          key={field}
+          isEditing={isEditing}
+          field={field}
+          value={isEditing ? editedProduct[field] : product[field]}
+          onChange={handleInputChange}
+        />
+      ))}
+      <ActionButtons
+        isEditing={isEditing}
+        onSave={handleSave}
+        onCancel={() => setIsEditing(false)}
+        onEdit={() => setIsEditing(true)}
+        onRemove={() => removeProduct(product.id)}
+      />
     </tr>
   );
 };

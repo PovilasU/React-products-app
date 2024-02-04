@@ -1,31 +1,20 @@
-// Table.jsx
 import React from "react";
 import AddProductRow from "./AddProductRow";
-import ProductRow from "./ProductRow";
+import TableHeader from "./TableHeader";
+import ProductRows from "./ProductRows";
 
-const Table = ({ products, addProduct, removeProduct, editProduct }) => {
-  return (
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Description</th>
-          <th>Link</th>
-        </tr>
-      </thead>
-      <tbody>
-        <AddProductRow addProduct={addProduct} />
-        {products.map((product, index) => (
-          <ProductRow
-            key={index}
-            product={product}
-            removeProduct={removeProduct}
-            editProduct={editProduct}
-          />
-        ))}
-      </tbody>
-    </table>
-  );
-};
+const Table = ({ products, addProduct, removeProduct, editProduct }) => (
+  <table>
+    <TableHeader />
+    <tbody>
+      <AddProductRow addProduct={addProduct} />
+      <ProductRows
+        products={products}
+        removeProduct={removeProduct}
+        editProduct={editProduct}
+      />
+    </tbody>
+  </table>
+);
 
 export default Table;
