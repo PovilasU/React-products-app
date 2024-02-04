@@ -1,14 +1,16 @@
 import "./App.css";
 
 import React, { useState, useEffect } from "react";
-import ProductInput from "./Components/ProductInput";
-import ProductActions from "./Components/ProductActions";
+
 import ProductRow from "./Components/ProductRow";
 // App.jsx
 
 import { getProductsAsync, saveEdit, cancelEdit } from "./utils";
 function App() {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(() => {
+    const savedProducts = localStorage.getItem("products");
+    return savedProducts ? JSON.parse(savedProducts) : [];
+  });
   const [editingProduct, setEditingProduct] = useState(null);
 
   const [newProduct, setNewProduct] = useState({
@@ -57,23 +59,8 @@ function App() {
   };
 
   useEffect(() => {
-    const getProductsAsync = async () => {
-      return new Promise((resolve, reject) => {
-        try {
-          const storedProducts = localStorage.getItem("products");
-          if (storedProducts) {
-            const parsedProducts = JSON.parse(storedProducts);
-            setProducts(parsedProducts);
-            resolve(parsedProducts);
-          }
-        } catch (error) {
-          reject(error);
-        }
-      });
-    };
-
-    getProductsAsync();
-  }, []);
+    localStorage.setItem("products", JSON.stringify(products));
+  }, [products]);
 
   const saveEdit = (id) => {
     const updatedProducts = products.map((product) =>
