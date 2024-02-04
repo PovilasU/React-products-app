@@ -1,7 +1,9 @@
 import "./App.css";
 
 import React, { useState, useEffect } from "react";
+// App.jsx
 
+import {} from "./utils";
 function App() {
   const [products, setProducts] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
@@ -33,13 +35,6 @@ function App() {
       setNewProductDescription("");
       setNewProductLink("");
     });
-  };
-
-  const editProduct = (product) => {
-    setEditingProduct(product);
-    setEditProductName(product.name);
-    setEditProductDescription(product.description);
-    setEditProductLink(product.link);
   };
 
   const deleteProduct = (id) => {
@@ -81,6 +76,13 @@ function App() {
     setNewProductLink("");
   };
 
+  const handleEditProduct = (product) => {
+    setEditingProduct(product);
+    setEditProductName(product.name);
+    setEditProductDescription(product.description);
+    setEditProductLink(product.link);
+  };
+
   useEffect(() => {
     const getProductsAsync = async () => {
       return new Promise((resolve, reject) => {
@@ -99,6 +101,37 @@ function App() {
 
     getProductsAsync();
   }, []);
+
+  const handleUpdateProduct = (id) => {
+    // Find the index of the product with the given id
+    const index = products.findIndex((product) => product.id === id);
+
+    // Create a new product object with the updated name, description, and link
+    const updatedProduct = {
+      ...products[index],
+      name: editProductName,
+      description: editProductDescription,
+      link: editProductLink,
+    };
+
+    // Create a new array with the updated product
+    const updatedProducts = [
+      ...products.slice(0, index),
+      updatedProduct,
+      ...products.slice(index + 1),
+    ];
+
+    // Update the products state
+    setProducts(updatedProducts);
+
+    // Reset the editingProduct state
+    setEditingProduct(null);
+  };
+
+  const cancelEdit = () => {
+    // Reset the editingProduct state
+    setEditingProduct(null);
+  };
 
   return (
     <div className="container">
@@ -154,55 +187,61 @@ function App() {
               </button>
             </td>
           </tr>
-          {products.map((product, index) => (
-            <tr key={index}>
-              {editingProduct?.id === product.id ? (
-                <>
-                  <td>
-                    <input
-                      type="text"
-                      value={newProductName}
-                      onChange={(e) => setNewProductName(e.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={newProductDescription}
-                      onChange={(e) => setNewProductDescription(e.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={newProductLink}
-                      onChange={(e) => setNewProductLink(e.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <button onClick={handleSubmit}>Update Product</button>
-                    <button onClick={() => setEditingProduct(null)}>
-                      Cancel
-                    </button>
-                  </td>
-                </>
-              ) : (
-                <>
-                  <td>{product.name}</td>
-                  <td>{product.description}</td>
-                  <td>
-                    <a href={product.link}>Link</a>
-                  </td>
-                  <td>
-                    <button onClick={() => editProduct(product)}>Edit</button>
-                    <button onClick={() => deleteProduct(product.id)}>
-                      Delete
-                    </button>
-                  </td>
-                </>
-              )}
-            </tr>
-          ))}
+          {products.map((product) => {
+            return (
+              <tr key={product.id}>
+                {editingProduct && editingProduct.id === product.id ? (
+                  <>
+                    <td>
+                      <input
+                        type="text"
+                        value={editProductName}
+                        onChange={(e) => setEditProductName(e.target.value)}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        value={editProductDescription}
+                        onChange={(e) =>
+                          setEditProductDescription(e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        value={editProductLink}
+                        onChange={(e) => setEditProductLink(e.target.value)}
+                      />
+                    </td>
+                    <td>
+                      <button onClick={() => handleUpdateProduct(product.id)}>
+                        Update Product
+                      </button>
+                      <button onClick={() => cancelEdit()}>Cancel</button>
+                    </td>
+                  </>
+                ) : (
+                  <>
+                    <td>{product.name}</td>
+                    <td>{product.description}</td>
+                    <td>
+                      <a href={product.link}>Link</a>
+                    </td>
+                    <td>
+                      <button onClick={() => handleEditProduct(product)}>
+                        Edit
+                      </button>
+                      <button onClick={() => deleteProduct(product.id)}>
+                        Delete
+                      </button>
+                    </td>
+                  </>
+                )}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
